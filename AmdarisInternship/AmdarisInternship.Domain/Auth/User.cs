@@ -10,8 +10,6 @@ namespace AmdarisInternship.Domain.Auth
 
         public string LastName { get; set; }
 
-        public string Email { get; set; }
-
         public string Skype { get; set; }
 
         public string AvatarExtension { get; set; }

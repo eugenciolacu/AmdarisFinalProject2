@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.OpenApi.Models;
 
 namespace AmdarisInternship
 {
@@ -34,7 +35,7 @@ namespace AmdarisInternship
 
             services.AddDbContext<AppDbContext>(optionBuilder =>
             {
-                optionBuilder.UseSqlServer(Configuration.GetConnectionString("OnlineBookShopConnection"));
+                optionBuilder.UseSqlServer(Configuration.GetConnectionString("DbConnection"));
             });
 
             services.AddIdentity<User, Role>(options =>
@@ -49,6 +50,8 @@ namespace AmdarisInternship
             {
                 options.Filters.Add(new AuthorizeFilter());
             });
+
+            ConfigureSwagger(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,9 +69,31 @@ namespace AmdarisInternship
 
             app.UseCors(configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json",
+                "Swagger Demo API v1");
+            });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+        }
+
+        private void ConfigureSwagger(IServiceCollection services)
+        {
+            var info = new OpenApiInfo()
+            {
+                Version = "v1",
+                Title = "Amdaris Internship API",
+                Description = "Amdaris Internship lesson calendar",
+            };
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", info);
             });
         }
     }
