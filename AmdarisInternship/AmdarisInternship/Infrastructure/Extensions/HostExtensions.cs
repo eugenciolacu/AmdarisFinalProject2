@@ -21,9 +21,10 @@ namespace AmdarisInternship.API.Infrastructure.Extensions
                 {
                     var context = services.GetRequiredService<AppDbContext>();
                     var userManager = services.GetRequiredService<UserManager<User>>();
+                    var roleManager = services.GetRequiredService<RoleManager<Role>>();
                     context.Database.Migrate();
 
-                    await Seed.SeedUsers(userManager);
+                    await Seed.SeedInitialData(userManager, roleManager);
                 }
                 catch (Exception ex)
                 {

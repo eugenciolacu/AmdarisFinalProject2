@@ -16,6 +16,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.OpenApi.Models;
+using AutoMapper;
+using AmdarisInternship.API.Mappings;
+using AmdarisInternship.Infrastructure.Repositories.Interfaces;
+using AmdarisInternship.Infrastructure.Repositories.Implementations;
+using AmdarisInternship.API.Services.Interfaces;
+using AmdarisInternship.API.Services.Implementations;
 
 namespace AmdarisInternship
 {
@@ -40,7 +46,12 @@ namespace AmdarisInternship
 
             services.AddIdentity<User, Role>(options =>
             {
-                options.Password.RequiredLength = 8;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireDigit = false;
+                options.User.RequireUniqueEmail = true;
             })
             .AddEntityFrameworkStores<AppDbContext>();
 
@@ -50,6 +61,19 @@ namespace AmdarisInternship
             {
                 options.Filters.Add(new AuthorizeFilter());
             });
+
+            var mapperConfig = new MapperConfiguration(m =>
+            {
+                m.AddProfile(new ModuleMappingProfile());
+            });
+
+            services.AddSingleton(mapperConfig.CreateMapper());
+
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+            services.AddScoped<IModuleRepository, ModuleRepository>();
+
+            services.AddScoped<IModuleModuleGradingsService, ModuleModuleGradingsService>();
 
             ConfigureSwagger(services);
         }
