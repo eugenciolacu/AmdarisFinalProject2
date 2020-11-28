@@ -8,6 +8,12 @@ namespace AmdarisInternship.API.Services.Interfaces
 {
     public interface IPromotionService
     {
-        public PromotionWithPromotionModuleDto AddNewModuleWithModuleGrading(PromotionWithPromotionModuleDto dto);
+        IList<PromotionDto> GetPromotions();
+
+        PromotionDto GetPromotionById(int id);
+
+        PromotionDto AddNewPromotionWithPromotionModule(PromotionWithPromotionModuleDto dto);
+
+        public PromotionDto UpdatePromotion(int id, PromotionDto dto);
     }
 }

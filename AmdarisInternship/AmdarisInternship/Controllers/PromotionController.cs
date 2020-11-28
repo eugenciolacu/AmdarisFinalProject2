@@ -23,21 +23,28 @@ namespace AmdarisInternship.API.Controllers
         [ApiExceptionFilter]
         public IActionResult Get()
         {
-            return Ok();
+            return Ok(_promotionService.GetPromotions());
         }
 
         [HttpGet("{id}")]
         [ApiExceptionFilter]
         public IActionResult Get(int id)
         {
-            return Ok();
+            var result = _promotionService.GetPromotionById(id);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
         }
 
         [HttpPost]
         [ApiExceptionFilter]
         public IActionResult Post([FromBody] PromotionWithPromotionModuleDto dto)
         {
-            var promotion = _promotionService.AddNewModuleWithModuleGrading(dto);
+            var promotion = _promotionService.AddNewPromotionWithPromotionModule(dto);
 
             if (promotion == null)
             {
@@ -49,9 +56,11 @@ namespace AmdarisInternship.API.Controllers
 
         [HttpPut("{id}")]
         [ApiExceptionFilter]
-        public IActionResult Put(int id)
+        public IActionResult Put(int id, PromotionDto dto)
         {
-            return Ok();
+            var promotion = _promotionService.UpdatePromotion(id, dto);
+
+            return CreatedAtAction(nameof(Get), dto);
         }
     }
 }

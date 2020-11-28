@@ -1,4 +1,5 @@
 ﻿using AmdarisInternship.API.Dtos.PromotionDtos;
+using AmdarisInternship.API.Exceptions;
 using AmdarisInternship.API.Services.Interfaces;
 using AmdarisInternship.Domain;
 using AmdarisInternship.Infrastructure.Repositories.Interfaces;
@@ -23,12 +24,36 @@ namespace AmdarisInternship.API.Services.Implementations
             _promotionModuleRepository = promotionModuleRepository;
         }
 
-        public PromotionWithPromotionModuleDto GetPromotionWithPromotionModulesByPromotionId(int id)
+        public IList<PromotionDto> GetPromotions()
         {
-            return new PromotionWithPromotionModuleDto();
+            var promotions = _promotionRepository.GetAll();
+
+            IList<PromotionDto> result = new List<PromotionDto>();
+            
+            foreach(var item in promotions)
+            {
+                PromotionDto dto = _mapper.Map<PromotionDto>(item);
+                result.Add(dto);
+            }
+
+            return result;
         }
 
-        public PromotionWithPromotionModuleDto AddNewModuleWithModuleGrading(PromotionWithPromotionModuleDto dto)
+        public PromotionDto GetPromotionById(int id)
+        {
+            var promotion = _promotionRepository.Find(id);
+
+            if (promotion == null)
+            {
+                throw new NotFoundException("Promotion not found");
+            }
+
+            PromotionDto result = _mapper.Map<PromotionDto>(promotion);
+
+            return result;
+        }
+
+        public PromotionDto AddNewPromotionWithPromotionModule(PromotionWithPromotionModuleDto dto)
         {
             if (CheckIfPromotionExists(dto.Promotion.Name))
             {
@@ -44,22 +69,49 @@ namespace AmdarisInternship.API.Services.Implementations
 
             for (int i = 0; i < dto.PromotionModules.Count; i++)
             {
-                if (CheckIfPromotionModuleExists(dto.PromotionModules[i].PromotionId, dto.PromotionModules[i].ModuleId))
+                if (CheckIfPromotionModuleExists(promotion.Id, dto.PromotionModules[i].ModuleId))
                 {
                     continue;
                 }
 
                 PromotionModule promotionModule = new PromotionModule
                 {
-                    PromotionId = dto.PromotionModules[i].PromotionId,
+                    PromotionId = promotion.Id,
                     ModuleId = dto.PromotionModules[i].ModuleId
                 };
 
                 promotionModules.Add(promotionModule);
                 _promotionModuleRepository.Add(promotionModule);
             }
+            _promotionModuleRepository.Save();
 
-            return GetPromotionWithPromotionModulesByPromotionId(promotion.Id);
+            return GetPromotionById(promotion.Id);
+        }
+
+        public PromotionDto UpdatePromotion(int id, PromotionDto dto)
+        {
+            Promotion promotion = _promotionRepository.Find(id);
+
+            if (promotion == null)
+            {
+                throw new NotFoundException("Promotion not found");
+            }
+
+            var result = _promotionRepository.Find(x => x.Name == dto.Name);
+
+            if (result != null)
+            {
+                throw new NotFoundException("Promotion with such name already exists");
+            }
+
+            promotion.Name = dto.Name;
+            promotion.StartDate = dto.StartDate;
+            promotion.EndDate = dto.EndDate;
+
+            _promotionRepository.Update(promotion);
+            _promotionRepository.Save();
+
+            return GetPromotionById(id);
         }
 
         private bool CheckIfPromotionExists(string name)
