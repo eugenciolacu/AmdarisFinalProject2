@@ -75,6 +75,8 @@ namespace AmdarisInternship
 
             services.AddScoped<IModuleModuleGradingsService, ModuleModuleGradingsService>();
 
+            services.AddScoped<IAccountService, AccountService>();
+
             ConfigureSwagger(services);
         }
 

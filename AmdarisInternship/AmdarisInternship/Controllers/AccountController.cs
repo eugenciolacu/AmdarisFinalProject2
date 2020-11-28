@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using AmdarisInternship.API.Dtos.Account;
 using AmdarisInternship.API.Infrastructure.Configurations;
+using AmdarisInternship.API.Infrastructure.Models;
+using AmdarisInternship.API.Services.Interfaces;
 using AmdarisInternship.Domain.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -19,58 +21,48 @@ namespace AmdarisInternship.API.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly AuthOptions _authenticationOptions;
-        private readonly SignInManager<User> _signInManager;
+        private readonly IAccountService _accountService;
 
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<Role> _roleManager;
-
-        public AccountController(IOptions<AuthOptions> authenticationOptions, SignInManager<User> signInManager, UserManager<User> userManager, RoleManager<Role> roleManager)
+        public AccountController(IAccountService accountService)
         {
-            _authenticationOptions = authenticationOptions.Value;
-            _signInManager = signInManager;
-
-            _userManager = userManager;
-            _roleManager = roleManager;
+            _accountService = accountService;
         }
 
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
-            var user = await _userManager.FindByNameAsync(userForLoginDto.Username);
-            if (user != null && await _userManager.CheckPasswordAsync(user, userForLoginDto.Password))
+            var result = await _accountService.Login(userForLoginDto);
+
+            if (result != null)
             {
-                var userRoles = await _userManager.GetRolesAsync(user);
-
-                var authClaims = new List<Claim>
+                return Ok(new
                 {
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                };
-
-                foreach (var userRole in userRoles)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-                }
-
-                var signinCredentials = new SigningCredentials(_authenticationOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256);
-                var jwtSecurityToken = new JwtSecurityToken(
-                     issuer: _authenticationOptions.Issuer,
-                     audience: _authenticationOptions.Audience,
-                     claims: authClaims,
-                     expires: DateTime.Now.AddDays(30),
-                     signingCredentials: signinCredentials
-                ) ;
-
-                var tokenHandler = new JwtSecurityTokenHandler();
-
-                var encodedToken = tokenHandler.WriteToken(jwtSecurityToken);
-
-                return Ok(new { AccessToken = encodedToken });
+                    token = new JwtSecurityTokenHandler().WriteToken(result),
+                    expiration = result.ValidTo
+                });
             }
+            else
+            {
+                return Unauthorized();
+            }
+        }
 
-            return Unauthorized();
+        [Authorize(Roles = UserRoles.Administrator)]
+        [HttpPost]
+        [Route("Register")]
+        public async Task<IActionResult> Register([FromBody] UserForRegisterDto userForRegisterDto)
+        {
+            RegistrationResponse response = await _accountService.Register(userForRegisterDto);
+
+            if (response.Status == "Error")
+            {
+                return Unauthorized(response.Message);
+            }
+            else
+            {
+                return Ok();
+            }
         }
     }
 }
