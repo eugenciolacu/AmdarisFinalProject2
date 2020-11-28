@@ -3,17 +3,10 @@ using AmdarisInternship.Domain.Auth;
 using AmdarisInternship.Infrastructure.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.OpenApi.Models;
 using AutoMapper;
@@ -76,6 +69,10 @@ namespace AmdarisInternship
             services.AddScoped<IModuleModuleGradingsService, ModuleModuleGradingsService>();
 
             services.AddScoped<IAccountService, AccountService>();
+
+            services.AddScoped<IPromotionRepository, PromotionRepository>();
+
+            services.AddScoped<IPromotionService, PromotionService>();
 
             ConfigureSwagger(services);
         }
