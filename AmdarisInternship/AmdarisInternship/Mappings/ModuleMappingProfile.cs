@@ -1,6 +1,7 @@
 ﻿using AmdarisInternship.API.Dtos.ModuleDtos;
 using AmdarisInternship.API.Dtos.ModuleGradingDtos;
 using AmdarisInternship.API.Dtos.PromotionDtos;
+using AmdarisInternship.API.Dtos.LessonDtos;
 using AmdarisInternship.Domain;
 using AutoMapper;
 
@@ -21,6 +22,12 @@ namespace AmdarisInternship.API.Mappings
 
             CreateMap<PromotionModule, PromotionModuleDto>();
             CreateMap<PromotionModuleDto, PromotionModule>();
+
+            CreateMap<Lesson, LessonDto>();
+            CreateMap<LessonDto, Lesson>();
+
+            CreateMap<Attachment, AttachmentDto>();
+            CreateMap<AttachmentDto, Attachment>();
         }
     }
 }

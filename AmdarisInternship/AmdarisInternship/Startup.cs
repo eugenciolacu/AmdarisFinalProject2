@@ -74,6 +74,10 @@ namespace AmdarisInternship
 
             services.AddScoped<IPromotionService, PromotionService>();
 
+            services.AddScoped<ILessonRepository, LessonRepository>();
+
+            services.AddScoped<ILessonAttachmentsService, LessonAttachmentsService>();
+
             ConfigureSwagger(services);
         }
 

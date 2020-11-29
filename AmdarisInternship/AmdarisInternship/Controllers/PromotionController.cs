@@ -1,11 +1,14 @@
 ﻿using AmdarisInternship.API.Dtos.PromotionDtos;
 using AmdarisInternship.API.Exceptions;
 using AmdarisInternship.API.Services.Interfaces;
+using AmdarisInternship.Domain.Auth;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AmdarisInternship.API.Controllers
 {
+    [Authorize(Roles = UserRoles.Administrator)]
     [Route("api/[controller]")]
     [ApiController]
     public class PromotionController : Controller
