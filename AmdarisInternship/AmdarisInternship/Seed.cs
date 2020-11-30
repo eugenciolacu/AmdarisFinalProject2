@@ -22,7 +22,7 @@ namespace AmdarisInternship.API
             {
                 var user = new User()
                 {
-                    UserName = "admin",
+                    UserName = "eugenciolacu@gmail.com",
                     Email = "eugenciolacu@gmail.com",
 
                     FirstName = "Eugeniu",

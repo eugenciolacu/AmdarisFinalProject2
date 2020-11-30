@@ -39,7 +39,7 @@ namespace AmdarisInternship
 
             services.AddIdentity<User, Role>(options =>
             {
-                options.Password.RequiredLength = 5;
+                options.Password.RequiredLength = 8;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;

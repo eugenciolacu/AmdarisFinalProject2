@@ -46,7 +46,7 @@ namespace AmdarisInternship.API.Controllers
         [ApiExceptionFilter]
         public IActionResult Post([FromBody] ModuleWithModuleGradingDto dto)
         {
-            var moduleWithGrading = _moduleModuleGradingsService.(dto);
+            var moduleWithGrading = _moduleModuleGradingsService.AddNewModuleWithModuleGrading(dto);
 
             if (moduleWithGrading == null)
             {

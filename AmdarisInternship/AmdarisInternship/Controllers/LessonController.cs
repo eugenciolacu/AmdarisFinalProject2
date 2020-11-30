@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AmdarisInternship.API.Controllers
 {
     [Authorize(Roles = UserRoles.Administrator)]
-    [Route("api/[lesson]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class LessonController : Controller
     {
