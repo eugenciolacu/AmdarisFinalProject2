@@ -36,11 +36,7 @@ namespace AmdarisInternship.API.Controllers
 
             if (result != null)
             {
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(result),
-                    expiration = result.ValidTo
-                });
+                return Ok(result);
             }
             else
             {

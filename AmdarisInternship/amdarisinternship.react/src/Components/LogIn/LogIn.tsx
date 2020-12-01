@@ -8,7 +8,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { FormControl } from '@material-ui/core';
+import { LoginForm } from '../../Models/LoginForm';
+import LoginService from '../../Services/LoginService';
+import { useHistory } from 'react-router-dom';
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -31,21 +34,36 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-
-interface FormData {
-  email: string;
-  password: string;
-}
-
 export default function LogIn() {
   const classes = useStyles();
+  const history = useHistory();
+  
 
-  const { register, handleSubmit, errors } = useForm<FormData>({
+  const { register, handleSubmit, errors } = useForm<LoginForm>({
     defaultValues:{
       email: "",
       password: ""
     }
   });
+
+  const onSubmit = async (data : LoginForm) => {
+    console.log(data);
+
+    const response = await LoginService.login(data);
+    if (response.isSuccess)
+    {
+        return history.push("/Lessons")
+    }
+
+    console.log(response);
+
+
+    // axios.post(`https://localhost:44336/api/Account/Login`,data)
+    //   .then(res => {
+    //     console.log(res);
+    //     console.log(res.data);
+    //   })
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -57,11 +75,7 @@ export default function LogIn() {
         <Typography component="h1" variant="h5">
           Log in
         </Typography>
-        <form className={classes.form} noValidate onSubmit={handleSubmit((formData) => {
-
-          console.log(formData, "formData");
-        
-        })}>
+        <form className={classes.form} noValidate onSubmit={handleSubmit(onSubmit)}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -69,7 +83,7 @@ export default function LogIn() {
             fullWidth
             id="email"
             label="Email Address"
-            name="email"
+            name="username"
             autoComplete="email"
             autoFocus
             inputRef={register({

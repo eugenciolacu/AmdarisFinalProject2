@@ -11,8 +11,6 @@ import LogIn from '../LogIn/LogIn';
 import Default from '../Default/Default';
 
 function AppRouting() {
-    
-
     return (
         <Router>
             <Switch>

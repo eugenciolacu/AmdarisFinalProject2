@@ -27,7 +27,7 @@ namespace AmdarisInternship.API.Services.Implementations
             _roleManager = roleManager;
         }
 
-        public async Task<JwtSecurityToken> Login(UserForLoginDto userForLoginDto)
+        public async Task<LoginResponse> Login(UserForLoginDto userForLoginDto)
         {
             var user = await _userManager.FindByNameAsync(userForLoginDto.Username);
 
@@ -35,6 +35,24 @@ namespace AmdarisInternship.API.Services.Implementations
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
 
+                string role = string.Empty;
+                if (userRoles.Contains(UserRoles.Administrator))
+                {
+                    role = UserRoles.Administrator;
+                }
+                else if (userRoles.Contains(UserRoles.Lecturer))
+                {
+                    role = UserRoles.Lecturer;
+                }
+                else if (userRoles.Contains(UserRoles.Mentor))
+                {
+                    role = UserRoles.Mentor;
+                }
+                else if (userRoles.Contains(UserRoles.Intern))
+                {
+                    role = UserRoles.Intern;
+                }
+                
                 var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
@@ -56,7 +74,15 @@ namespace AmdarisInternship.API.Services.Implementations
                      signingCredentials: signinCredentials
                 );
 
-                return jwtSecurityToken;
+                return new LoginResponse()
+                {
+                    isSuccess = true,
+                    Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+                    TokenExpiration = jwtSecurityToken.ValidTo,
+                    MaxRole = role,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName
+                };
             }
 
             return null;
