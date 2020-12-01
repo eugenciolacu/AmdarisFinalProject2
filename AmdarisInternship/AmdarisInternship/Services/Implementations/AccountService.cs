@@ -19,12 +19,14 @@ namespace AmdarisInternship.API.Services.Implementations
         private readonly AuthOptions _authenticationOptions;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public AccountService(IOptions<AuthOptions> authenticationOptions, UserManager<User> userManager, RoleManager<Role> roleManager)
+        public AccountService(IOptions<AuthOptions> authenticationOptions, UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager)
         {
             _authenticationOptions = authenticationOptions.Value;
             _userManager = userManager;
             _roleManager = roleManager;
+            _signInManager = signInManager;
         }
 
         public async Task<LoginResponse> Login(UserForLoginDto userForLoginDto)
@@ -84,6 +86,13 @@ namespace AmdarisInternship.API.Services.Implementations
                     LastName = user.LastName
                 };
             }
+
+            return null;
+        }
+
+        public async Task<LoginResponse> Logout ()
+        {
+            await _signInManager.SignOutAsync();
 
             return null;
         }

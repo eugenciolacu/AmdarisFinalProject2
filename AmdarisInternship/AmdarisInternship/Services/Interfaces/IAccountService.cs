@@ -8,6 +8,8 @@ namespace AmdarisInternship.API.Services.Interfaces
     {
         Task<LoginResponse> Login(UserForLoginDto userForLoginDto);
 
+        Task<LoginResponse> Logout();
+
         Task<RegistrationResponse> Register(UserForRegisterDto userForRegisterDto);
     }
 }

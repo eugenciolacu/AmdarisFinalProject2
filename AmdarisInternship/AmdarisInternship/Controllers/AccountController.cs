@@ -29,7 +29,8 @@ namespace AmdarisInternship.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("login")]
+        [HttpPost]
+        [Route("Login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
             var result = await _accountService.Login(userForLoginDto);
@@ -43,6 +44,17 @@ namespace AmdarisInternship.API.Controllers
                 return Unauthorized();
             }
         }
+
+        [Authorize]
+        [HttpPost]
+        [Route("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            var result = await _accountService.Logout();
+
+            return Ok("Successfully");
+        }
+        
 
         [Authorize(Roles = UserRoles.Administrator)]
         [HttpPost]

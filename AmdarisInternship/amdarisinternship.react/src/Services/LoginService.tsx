@@ -16,6 +16,19 @@ async function login (loginForm : LoginForm) : Promise<UserResponse>
     return data;
 }
 
+async function logOut(): Promise <any> {
+    await http.postNoParam(`${authPath}logout`);
+    localStorage.clear();
+}
+
+function getCurrentUser(): UserResponse {
+    const userString = localStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) as UserResponse : {} as UserResponse;
+    return user;   
+}
+
 export default {
-    login
+    login,
+    getCurrentUser,
+    logOut
 }
