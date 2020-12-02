@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom';
 import AppRouting from './Components/AppRouting/AppRouting';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <AppRouting />
-  </React.StrictMode>,
+    <AppRouting />,
   document.getElementById('root')
 );

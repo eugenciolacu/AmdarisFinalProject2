@@ -22,7 +22,7 @@ function remove(path: string, body: any) {
     return axios.delete(path);
 }
 
-function setToken(token: string) {
+async function setToken(token: string) {
     axios.defaults.headers['Authorization'] = `Bearer ${token}`;
 }
 

@@ -4,10 +4,12 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import LoginService from '../../Services/LoginService';
 import { useHistory } from 'react-router-dom';
+
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -15,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
     },
     menuButton: {
-      marginRight: theme.spacing(2),
+      marginRight: theme.spacing(0),
     },
     title: {
       flexGrow: 1,
@@ -28,21 +30,62 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function ButtonAppBar() {
   const classes = useStyles();
   const history = useHistory();
-  const handleClick = async () => {
+  const handleLogoutClick = async () => {
     LoginService.logOut();
     history.replace("/Login")
   }
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = (path: string) => {
+    setAnchorEl(null);
+    history.push(path);
+  };
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+            <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} style={{color: 'white'}}>
             <MenuIcon />
-          </IconButton>
+              
+            </Button>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              getContentAnchorEl={null}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'center',
+              }}
+            >
+              <MenuItem onClick={ () => handleClose("/Lessons") }>Lessons</MenuItem>
+              <MenuItem onClick={ () => handleClose("/Grades") }>Grades</MenuItem>
+              <MenuItem onClick={ () => handleClose("/Contacts") }>Contacts</MenuItem>
+
+              { (() => {
+                if (LoginService.getCurrentUser().maxRole == "Administrator")
+                {
+                  return <MenuItem onClick={ () => handleClose("/Administration")}>Administration</MenuItem>
+                }
+              }) ()}     
+            </Menu>
+
           <Typography variant="h6" className={classes.title}>
             {LoginService.getCurrentUser().firstName + ' ' + LoginService.getCurrentUser().lastName}
           </Typography>
-          <Button color="inherit" onClick={handleClick}>Logout</Button>
+          <Button color="inherit" onClick={handleLogoutClick}>Logout</Button>
         </Toolbar>
       </AppBar>
     </div>

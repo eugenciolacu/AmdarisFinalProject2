@@ -30,6 +30,17 @@ namespace AmdarisInternship
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    buider =>
+                    {
+                        buider.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                    });
+            });
+
             services.AddControllers();
 
             services.AddDbContext<AppDbContext>(optionBuilder =>
@@ -89,12 +100,13 @@ namespace AmdarisInternship
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors();
+            //app.UseCors(configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseCors(configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
