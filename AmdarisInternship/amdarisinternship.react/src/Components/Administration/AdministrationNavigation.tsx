@@ -4,6 +4,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { Paper } from '@material-ui/core';
 import ModuleForm from './ModuleForm';
+import ModuleService from '../../Services/ModuleService';
 
 export default function Navigation() {
     const classes = useStyles();
@@ -12,36 +13,31 @@ export default function Navigation() {
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue);
 
-        if (newValue == 0)
-        {
+        if (newValue == 0) {
             <ModuleForm />
         }
     };
 
-    let tmp : any = <ModuleForm />;
+    let tmp: any = <ModuleForm />;
 
-    if (value != 0)
-    {
+    if (value != 0) {
         tmp = null;
     }
 
     return (
         <>
-            <Paper className={classes.root}>
-                <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    centered
-                >
-                    <Tab label="Modules" />
-                    <Tab label="Promotions" />
-                    <Tab label="Lessons" />
-                    <Tab label="Users" />
-                </Tabs>
-            </Paper>
-
+            <Tabs
+                value={value}
+                onChange={handleChange}
+                indicatorColor="primary"
+                textColor="primary"
+                centered
+            >
+                <Tab label="Modules" />
+                <Tab label="Promotions" />
+                <Tab label="Lessons" />
+                <Tab label="Users" />
+            </Tabs>
             {tmp}
         </>
     );
