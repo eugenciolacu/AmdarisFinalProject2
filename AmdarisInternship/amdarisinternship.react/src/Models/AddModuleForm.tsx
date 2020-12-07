@@ -1,3 +1,5 @@
 export interface AddModuleForm {
-    name: string;
+    moduleName: string;
+    componentName: string;
+    weight: number;
 }

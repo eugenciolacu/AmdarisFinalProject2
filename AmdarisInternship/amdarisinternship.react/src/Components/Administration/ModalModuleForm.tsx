@@ -11,8 +11,8 @@ import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import { AddModuleForm } from '../../Models/AddModuleForm';
 import { useForm } from "react-hook-form";
-import { isRegularExpressionLiteral } from "typescript";
-import { useEffect } from "react";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -52,33 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-function computeSumOfWeights () {
-    let inputs = document.getElementsByTagName('input');
-    
-    let counter : number = 0;
-    let sum : number = 0;
 
-    let i : number = 0;
-
-    for(i = 0; i < inputs.length; i++)
-    {
-        if (inputs[i].id.includes('weight', 0))
-        {
-            counter++;
-            sum += parseFloat (inputs[i].value);
-        }
-    }
-
-    sum = parseFloat(sum.toFixed(2));
-
-    let sumElem = document.getElementById('sum') as HTMLInputElement;
-    sumElem.value = (sum as unknown) as string;
-
-    if (sum != 1)
-    { 
-        alert ("not ok");
-    }
-}
 
 
 
@@ -86,122 +60,197 @@ function computeSumOfWeights () {
 
 export default function ModalModuleForm({ isOpen, setOpen }: any) {
     const classes = useStyles();
+    const schema = yup.object().shape({
+        moduleName: yup.string().required(),
+        componentName: yup.string().required(),
+        weight: yup.string().required().matches(/^(0(\.\d+)?|1(\.0+)?)$/, "Provide valid weight")
+      });
 
-    const [counter, setCount] = useState(1);
 
-    // useEffect (() => {
-        
-    // })
 
-    console.log(";oeirhg;ewhrg;hqrghrq;oguh");
-
-    const { register, handleSubmit, errors } = useForm<AddModuleForm>({
-        defaultValues: {
-            name: "",
-        }
+      const { register, handleSubmit, errors } = useForm<AddModuleForm>({
+        resolver: yupResolver(schema)
     });
+
+
+
+    // const { register, handleSubmit, errors } = useForm<AddModuleForm>({
+    //     defaultValues: {
+    //         moduleName: "",
+    //         componentName: "",
+    //         weight: 0
+    //     }
+    // });
+
+    const createModuleExamComponents = (column_1: any, column_2: any) => {
+        return { column_1, column_2 }
+    }
+
+    const [moduleExamComponents, updateModuleExamComponents]: [Array<any>, any] = useState([
+        createModuleExamComponents(
+            <>
+                <TextField
+                    required
+                    autoFocus
+                    margin="dense"
+                    id="examComponentName"
+                    label="Component name"
+                    type="text"
+                    inputRef={register({
+                        required: {
+                            value: true,
+                            message: "Please fill this field"
+                        },
+                    })}
+                />
+                <p>{errors.moduleName?.message}</p>
+            </>,
+            <>
+                <TextField
+                    required
+                    autoFocus
+                    margin="dense"
+                    id="weight"
+                    label="Weight 0.0 - 1.0"
+                    type="text"
+                    inputRef={register({
+                        required: {
+                            value: true,
+                            message: "Please fill this field"
+                        },
+                        pattern: {
+                            value: /^(0(\.\d+)?|1(\.0+)?)$/,
+                            message: "Provide valid weight"
+                        }
+                    })}
+                />
+                {errors.weight && (<div> {errors.weight.message} </div>)}
+            </>
+        ),
+    ]);
 
     const onSubmit = async () => {
         computeSumOfWeights();
     }
 
-
-
-
-
     const createModuleData = (column_1: any) => {
         return { column_1 };
     }
-    
+
     const moduleRows = [
         createModuleData(
-            <TextField
-                required
-                autoFocus
-                margin="dense"
-                id="newModuleName"
-                label="Module name"
-                name = "name"
-                type="text"
-                fullWidth
-                inputRef = {register({
-                    required: {
-                        value: true,
-                        message: "Please fill this field",
-                    },
-                })}
-            />
+            <>
+                <TextField
+                    required
+                    autoFocus
+                    margin="dense"
+                    id="newModuleName"
+                    label="Module name"
+                    type="text"
+                    fullWidth
+                    inputRef={register({
+                        required: {
+                            value: true,
+                            message: "Please fill this field",
+                        },
+                    })}
+                />
+                {errors.moduleName && (<div> {errors.moduleName.message} </div>)}
+            </>
         ),
     ];
 
-    const createModuleExamComponents = (column_1: any, column_2: any) => {
-        return { column_1, column_2 }
-    }
-    
-    let moduleExamComponents = [
-        createModuleExamComponents(
-            <TextField
-                autoFocus
-                margin="dense"
-                id="examComponentName"
-                label="Component name"
-                type="text"
-                fullWidth
-            />,
-            <TextField
-                autoFocus
-                margin="dense"
-                id="weight"
-                label="Weight 0.0 - 1.0"
-                type="text"
-                fullWidth
-            />
-        ),
-    ];
+    const addExamComponentRow = () => {
+        let i = moduleExamComponents.length + 1;
 
-    const addExamComponentRow = (i: number) => {
         let tmp: Array<any> = new Array(moduleExamComponents.length + 1);
         tmp = Object.assign([], moduleExamComponents);
         tmp[moduleExamComponents.length] = createModuleExamComponents(
-            <TextField
-                autoFocus
-                margin="dense"
-                id={"examComponentName" + i}
-                label="Component name"
-                type="text"
-            />,
-            <TextField
-                autoFocus
-                margin="dense"
-                id={"weight" + i}
-                label="Weight 0.0 - 1.0"
-                type="text"
-                fullWidth
-            />
+            <>
+                <TextField
+                    required
+                    autoFocus
+                    margin="dense"
+                    id={"examComponentName" + i}
+                    label="Component name"
+                    type="text"
+                    inputRef={register({
+                        required: {
+                            value: true,
+                            message: "Please fill this field"
+                        },
+                    })}
+                />
+                {errors.componentName && (<div> {errors.componentName.message} </div>)}
+            </>,
+            <>
+                <TextField
+                    required
+                    autoFocus
+                    margin="dense"
+                    id={"weight" + i}
+                    label="Weight 0.0 - 1.0"
+                    type="text"
+                    inputRef={register({
+                        required: {
+                            value: true,
+                            message: "Please fill this field"
+                        },
+                        pattern: {
+                            value: /^(0(\.\d+)?|1(\.0+)?)$/,
+                            message: "Provide valid weight"
+                        }
+                    })}
+                />
+                {errors.weight && (<div> {errors.weight.message} </div>)}
+            </>
         );
-    
-        moduleExamComponents = tmp;
-    }
-    
-    const removeLastRow = () => {
-        let tmp: Array<any> = new Array(moduleExamComponents.length - 1);
-        
-        let i: number = 0;
-    
-        if (moduleExamComponents.length == 1)
-        {
-            return;
-        }
-    
-        for (i; i < tmp.length; i++)
-        {
-            tmp[i] = moduleExamComponents[i];
-        }
-    
-        moduleExamComponents = tmp;
+
+        updateModuleExamComponents(tmp);
     }
 
-    
+    const removeLastRow = () => {
+        let tmp: Array<any> = new Array(moduleExamComponents.length - 1);
+
+        let i: number = 0;
+
+        if (moduleExamComponents.length == 1) {
+            return;
+        }
+
+        for (i; i < tmp.length; i++) {
+            tmp[i] = moduleExamComponents[i];
+        }
+
+        updateModuleExamComponents(tmp);
+    }
+
+    const computeSumOfWeights = () => {
+        let inputs = document.getElementsByTagName('input');
+
+        let counter: number = 0;
+        let sum: number = 0;
+
+        let i: number = 0;
+
+        for (i = 0; i < inputs.length; i++) {
+            if (inputs[i].id.includes('weight', 0)) {
+                counter++;
+                sum += parseFloat(inputs[i].value);
+            }
+        }
+
+        sum = parseFloat(sum.toFixed(2));
+
+        let sumElem = document.getElementById('sum') as HTMLInputElement;
+        sumElem.value = (sum as unknown) as string;
+
+        if (sum != 1) {
+            alert("not ok");
+        }
+    }
+
+
 
 
 
@@ -230,7 +279,6 @@ export default function ModalModuleForm({ isOpen, setOpen }: any) {
                                         <TableRow key={row.column_1}>
                                             <TableCell component="th" scope="row">
                                                 {row.column_1}
-                                                {errors.name && (<div> {errors.name.message} </div>)}
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -253,13 +301,12 @@ export default function ModalModuleForm({ isOpen, setOpen }: any) {
                                             </TableCell>
                                         </TableRow>
                                     ))}
-                                    {/* , {console.log(moduleExamComponents.length)} */}
                                 </TableBody>
 
                                 <TableRow>
                                     <TableCell component="th" scope="row">
                                         <Button
-                                            onClick={() => { addExamComponentRow(counter); setCount(counter + 1); }}
+                                            onClick={() => { addExamComponentRow(); }}
                                             variant="contained"
                                             color="primary"
                                             className={classes.submit}
@@ -270,7 +317,7 @@ export default function ModalModuleForm({ isOpen, setOpen }: any) {
                                         <span> </span>
 
                                         <Button
-                                            onClick={() => { removeLastRow(); setCount(counter - 1); }}
+                                            onClick={() => { removeLastRow(); }}
                                             variant="contained"
                                             color="secondary"
                                             className={classes.submit}
