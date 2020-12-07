@@ -24,7 +24,7 @@ namespace AmdarisInternship.API.Infrastructure.Extensions
                     var roleManager = services.GetRequiredService<RoleManager<Role>>();
                     context.Database.Migrate();
 
-                    await Seed.SeedInitialData(userManager, roleManager);
+                    await Seed.SeedInitialData(userManager, roleManager, context);
                 }
                 catch (Exception ex)
                 {

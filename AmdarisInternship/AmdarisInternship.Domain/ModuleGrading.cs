@@ -11,5 +11,7 @@ namespace AmdarisInternship.Domain
         public int ModuleId { get; set; }
 
         public List<ExamGradeComponent> ExamGradeComponents { get; set; }
+
+        public Module Module { get; set; }
     }
 }
