@@ -9,10 +9,9 @@ import Button from "@material-ui/core/Button/Button";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
-import { AddModuleForm } from '../../Models/AddModuleForm';
+import { AddModuleForm, ModuleGradingForm } from '../../Models/AddModuleForm';
 import { useForm } from "react-hook-form";
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from "yup";
+import ModuleService from "../../Services/ModuleService";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -43,45 +42,75 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-export default function ModalModuleForm({ isOpen, setOpen }: any) {
+export default function ModalModuleForm({ isOpen, setOpen, setTrigger, trigger }: any) {
     const classes = useStyles();
-    const schema = yup.object().shape({
-        moduleName: yup.string().required(),
-        componentName: yup.string().required(),
-        weight: yup.string().required().matches(/^(0(\.\d+)?|1(\.0+)?)$/, "Provide valid weight")
-      });
 
+    const [btnDisabled, setBtnDisabled] = useState(true);
 
-
-      const { register, handleSubmit, errors } = useForm<AddModuleForm>({
-        resolver: yupResolver(schema)
+    const { register, handleSubmit, errors } = useForm<AddModuleForm>({
+        defaultValues: {
+            nameM: "",
+            moduleGradings: [{
+                name: "",
+                weight: 0   
+            }]
+        }
     });
 
+    const onChange = async () => {
+        computeSumOfWeights();
+    }
 
+    const onSubmit = async () => {
+        let inputs = document.getElementsByTagName('input');
 
-    // const { register, handleSubmit, errors } = useForm<AddModuleForm>({
-    //     defaultValues: {
-    //         moduleName: "",
-    //         componentName: "",
-    //         weight: 0
-    //     }
-    // });
+        let moduleName: string = '';
+        let componentName: Array<string> = new Array(0);
+        let componentWeight: Array<string> = new Array(0);
 
+        let i: number = 0;
+
+        for (i = 0; i < inputs.length; i++) {
+            if (inputs[i].id.includes('newModuleName', 0)) {
+                moduleName = inputs[i].value;
+            }
+
+            if (inputs[i].id.includes('componentName', 0)) {
+                let tmp1: Array<string> = new Array(componentName.length + 1);
+                tmp1 = Object.assign([], componentName);
+                tmp1[tmp1.length] = inputs[i].value;
+                componentName = tmp1;
+            }
+
+            if (inputs[i].id.includes('weight', 0)) {
+                let tmp2: Array<string> = new Array(componentWeight.length + 1);
+                tmp2 = Object.assign([], componentWeight);
+                tmp2[tmp2.length] = inputs[i].value;
+                componentWeight = tmp2;
+            }
+        }
+
+        let mg: Array<ModuleGradingForm> = new Array<ModuleGradingForm>(componentName.length);
+
+        for (i = 0; i < mg.length; i++) {
+            mg[i] = {
+                name: componentName[i],
+                weight: Number(componentWeight[i])
+            }
+        }
+
+        let data: AddModuleForm = {
+            nameM: moduleName,
+            moduleGradings: mg
+        }
+
+        // console.log(data);
+
+        await ModuleService.addModule(data).then(() => {
+            setOpen(false);
+            setTrigger(trigger + 1);
+        });
+    }
     const createModuleExamComponents = (column_1: any, column_2: any) => {
         return { column_1, column_2 }
     }
@@ -90,10 +119,11 @@ export default function ModalModuleForm({ isOpen, setOpen }: any) {
         createModuleExamComponents(
             <>
                 <TextField
+                    name={"name"}
                     required
                     autoFocus
                     margin="dense"
-                    id="examComponentName"
+                    id="componentName"
                     label="Component name"
                     type="text"
                     inputRef={register({
@@ -103,16 +133,18 @@ export default function ModalModuleForm({ isOpen, setOpen }: any) {
                         },
                     })}
                 />
-                <p>{errors.moduleName?.message}</p>
+                {/* <p>{errors.moduleName?.message}</p> */}
             </>,
             <>
                 <TextField
+                    name="weight"
                     required
                     autoFocus
                     margin="dense"
                     id="weight"
                     label="Weight 0.0 - 1.0"
                     type="text"
+                    onChange={() => { onChange(); }}
                     inputRef={register({
                         required: {
                             value: true,
@@ -124,14 +156,12 @@ export default function ModalModuleForm({ isOpen, setOpen }: any) {
                         }
                     })}
                 />
-                {errors.weight && (<div> {errors.weight.message} </div>)}
+                {/* {errors.weight && (<div> {errors.weight.message} </div>)} */}
             </>
         ),
     ]);
 
-    const onSubmit = async () => {
-        computeSumOfWeights();
-    }
+
 
     const createModuleData = (column_1: any) => {
         return { column_1 };
@@ -141,6 +171,7 @@ export default function ModalModuleForm({ isOpen, setOpen }: any) {
         createModuleData(
             <>
                 <TextField
+                    name="nameM"
                     required
                     autoFocus
                     margin="dense"
@@ -155,23 +186,24 @@ export default function ModalModuleForm({ isOpen, setOpen }: any) {
                         },
                     })}
                 />
-                {errors.moduleName && (<div> {errors.moduleName.message} </div>)}
+                {errors.nameM && (<div> {errors.nameM.message} </div>)}
             </>
         ),
     ];
 
     const addExamComponentRow = () => {
-        let i = moduleExamComponents.length + 1;
+        let i = moduleExamComponents.length;
 
         let tmp: Array<any> = new Array(moduleExamComponents.length + 1);
         tmp = Object.assign([], moduleExamComponents);
         tmp[moduleExamComponents.length] = createModuleExamComponents(
             <>
                 <TextField
+                    name={"name" + i}
                     required
                     autoFocus
                     margin="dense"
-                    id={"examComponentName" + i}
+                    id={"componentName" + i}
                     label="Component name"
                     type="text"
                     inputRef={register({
@@ -181,16 +213,18 @@ export default function ModalModuleForm({ isOpen, setOpen }: any) {
                         },
                     })}
                 />
-                {errors.componentName && (<div> {errors.componentName.message} </div>)}
+                {/* {errors.componentName && (<div> {errors.componentName.message} </div>)} */}
             </>,
             <>
                 <TextField
+                    name={"weight" + i}
                     required
                     autoFocus
                     margin="dense"
                     id={"weight" + i}
                     label="Weight 0.0 - 1.0"
                     type="text"
+                    onChange={() => { onChange(); }}
                     inputRef={register({
                         required: {
                             value: true,
@@ -202,7 +236,7 @@ export default function ModalModuleForm({ isOpen, setOpen }: any) {
                         }
                     })}
                 />
-                {errors.weight && (<div> {errors.weight.message} </div>)}
+                {/* {errors.weight && (<div> {errors.weight.message} </div>)} */}
             </>
         );
 
@@ -245,15 +279,13 @@ export default function ModalModuleForm({ isOpen, setOpen }: any) {
         let sumElem = document.getElementById('sum') as HTMLInputElement;
         sumElem.value = (sum as unknown) as string;
 
-        if (sum != 1) {
-            alert("not ok");
+        if (sum == 1) {
+            setBtnDisabled(false);
+        }
+        else {
+            setBtnDisabled(true);
         }
     }
-
-
-
-
-
 
 
     return (
@@ -292,7 +324,7 @@ export default function ModalModuleForm({ isOpen, setOpen }: any) {
                             <Table className={classes.table} size="small" aria-label="a dense table">
                                 <TableBody>
                                     {moduleExamComponents.map((row) => (
-                                        <TableRow key={row.column_1}>
+                                        <TableRow key={moduleExamComponents[row]}>
                                             <TableCell component="th" scope="row">
                                                 {row.column_1}
                                             </TableCell>
@@ -340,6 +372,7 @@ export default function ModalModuleForm({ isOpen, setOpen }: any) {
                                 <TableRow>
                                     <TableCell>
                                         <Button
+                                            disabled={btnDisabled}
                                             type="submit"
                                             variant="contained"
                                             color="primary"
@@ -352,12 +385,9 @@ export default function ModalModuleForm({ isOpen, setOpen }: any) {
                                 </TableRow>
                             </Table>
                         </Box>
-
                     </form>
                 </div>
-
             </DialogContent>
-
         </Dialog>
 
     );

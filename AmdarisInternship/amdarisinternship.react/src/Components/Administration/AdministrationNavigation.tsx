@@ -2,9 +2,7 @@ import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { Paper } from '@material-ui/core';
-import ModuleForm from './ModuleForm';
-import ModuleService from '../../Services/ModuleService';
+import ModuleView from './ModuleView';
 
 export default function Navigation() {
     const classes = useStyles();
@@ -14,11 +12,11 @@ export default function Navigation() {
         setValue(newValue);
 
         if (newValue == 0) {
-            <ModuleForm />
+            <ModuleView />
         }
     };
 
-    let tmp: any = <ModuleForm />;
+    let tmp: any = <ModuleView />;
 
     if (value != 0) {
         tmp = null;

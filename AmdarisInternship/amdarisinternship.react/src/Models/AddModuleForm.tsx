@@ -1,5 +1,9 @@
 export interface AddModuleForm {
-    moduleName: string;
-    componentName: string;
+    nameM: string;
+    moduleGradings: ModuleGradingForm[];
+}
+
+export interface ModuleGradingForm {
+    name: string;
     weight: number;
 }

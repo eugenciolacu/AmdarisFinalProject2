@@ -76,15 +76,17 @@ function Row(props: { row: ModuleWithModuleGrading }) {
 }
 
 
-export default function ModuleForm() {
+export default function ModuleView() {
 
     const [isOpen, setOpen] = useState(false);
+    const [trigger, setTrigger] = useState(0);
 
     const [modules, setModules] = useState([] as ModuleWithModuleGrading[]);
 
+
     useEffect(() => {
         fetchModules();
-    }, [])
+    }, [trigger])
 
     let getData: Array<ModuleWithModuleGrading>;
 
@@ -127,7 +129,7 @@ export default function ModuleForm() {
                         ))}
                         <TableRow>
                             <TableCell>
-                                <Button variant="contained" color="primary" onClick = {() => setOpen(true)}>Add module</Button>
+                                <Button variant="contained" color="primary" onClick={() => setOpen(true)}>Add module</Button>
                             </TableCell>
                             <TableCell />
                         </TableRow>
@@ -135,7 +137,7 @@ export default function ModuleForm() {
                 </Table>
             </TableContainer>
 
-            <ModalModuleForm isOpen = {isOpen} setOpen = {setOpen}/>
+            <ModalModuleForm isOpen={isOpen} setOpen={setOpen} setTrigger={setTrigger} trigger={trigger} />
         </>
     );
 }
