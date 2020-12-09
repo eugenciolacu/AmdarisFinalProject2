@@ -171,7 +171,7 @@ namespace AmdarisInternship.API
 
             if (!appDbContext.Lessons.Any())
             {
-                var lesson = new Lesson()
+                var lesson1 = new Lesson()
                 {
                     Name = "Intership intro",
                     Description = "kljghkwhg;kwhrth;whrtlhjwr;ltjhwlrjth.kjhergkhwrlthj",
@@ -182,7 +182,21 @@ namespace AmdarisInternship.API
                     PromotionId = appDbContext.Promotions.FirstOrDefault(x => x.Name == "Winter 2021").Id
                 };
 
-                appDbContext.Lessons.Add(lesson);
+                appDbContext.Lessons.Add(lesson1);
+
+                var lesson2 = new Lesson()
+                {
+                    Name = "Second lesson",
+                    Description = "second lesson description",
+                    StartTime = new System.DateTime(2021, 1, 3, 9, 0, 0),
+                    EndTime = new System.DateTime(2021, 1, 3, 10, 0, 0),
+                    LecturerId = appDbContext.Users.FirstOrDefault(x => x.UserName == "eugenciolacu@yahoo.com").Id,
+                    ModuleId = appDbContext.Modules.FirstOrDefault(x => x.Name == "C#").Id,
+                    PromotionId = appDbContext.Promotions.FirstOrDefault(x => x.Name == "Winter 2021").Id
+                };
+
+                appDbContext.Lessons.Add(lesson2);
+
                 appDbContext.SaveChanges();
             }
 

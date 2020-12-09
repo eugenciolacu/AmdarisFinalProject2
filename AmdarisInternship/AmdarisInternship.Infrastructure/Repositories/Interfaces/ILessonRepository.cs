@@ -7,6 +7,6 @@ namespace AmdarisInternship.Infrastructure.Repositories.Interfaces
 {
     public interface ILessonRepository : IRepository<Lesson>
     {
-
+        IList<Lesson> GetLessonsWithAttachmentsForPromotion(int promotionId);
     }
 }

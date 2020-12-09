@@ -88,29 +88,29 @@ export default function ModuleView() {
         fetchModules();
     }, [trigger])
 
-    let getData: Array<ModuleWithModuleGrading>;
+    let gotModules: Array<ModuleWithModuleGrading>;
 
     async function fetchModules() {
         const data = await ModuleService.getModules();
 
-        getData = new Array(data.data.length);
+        gotModules = new Array(data.data.length);
         let i: number = 0;
 
-        for (i; i < getData.length; i++) {
-            getData[i] = new Object as ModuleWithModuleGrading;
-            getData[i].module = new Object as Module;
-            getData[i].moduleGradings = new Array<ModuleGrading>(data.data[i].moduleGradings.length);
-            getData[i].module = data.data[i].module;
+        for (i; i < gotModules.length; i++) {
+            gotModules[i] = new Object as ModuleWithModuleGrading;
+            gotModules[i].module = new Object as Module;
+            gotModules[i].moduleGradings = new Array<ModuleGrading>(data.data[i].moduleGradings.length);
+            gotModules[i].module = data.data[i].module;
 
             let j: number = 0;
-            for (j; j < getData[i].moduleGradings.length; j++) {
-                getData[i].moduleGradings[j] = data.data[i].moduleGradings[j];
+            for (j; j < gotModules[i].moduleGradings.length; j++) {
+                gotModules[i].moduleGradings[j] = data.data[i].moduleGradings[j];
             }
         }
 
-        console.log(getData);
+        console.log(gotModules);
 
-        setModules(getData);
+        setModules(gotModules);
     }
 
     return (

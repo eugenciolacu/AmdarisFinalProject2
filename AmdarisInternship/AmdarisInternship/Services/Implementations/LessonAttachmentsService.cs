@@ -21,6 +21,28 @@ namespace AmdarisInternship.API.Services.Implementations
             _attachmentRepository = attachmentRepository;
         }
 
+        public IList<LessonWithAttachmentsDto> GetLessonsWithAttachments (int promotionId)
+        {
+            var lessons = _lessonRepository.GetLessonsWithAttachmentsForPromotion(promotionId);
+
+            IList<LessonWithAttachmentsDto> result = new List<LessonWithAttachmentsDto>();
+
+            foreach (var item in lessons)
+            {
+                LessonWithAttachmentsDto lessonWithAttachmentsDto = new LessonWithAttachmentsDto();
+                lessonWithAttachmentsDto.Lesson = _mapper.Map<LessonDto>(item);
+
+                foreach (var lessonsAttachment in item.Attachments)
+                {
+                    lessonWithAttachmentsDto.Attachments.Add(_mapper.Map<AttachmentDto>(lessonsAttachment));
+                }
+
+                result.Add(lessonWithAttachmentsDto);
+            }
+
+            return result;
+        }
+
         public LessonWithAttachmentsDto AddLessonWithAttachments(LessonWithAttachmentsDto dto)
         {
             if (CheckIfLessonExistsInPromotion(dto.Lesson.Name, dto.Lesson.PromotionId))

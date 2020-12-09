@@ -1,9 +1,9 @@
 ﻿using AmdarisInternship.Domain;
 using AmdarisInternship.Infrastructure.Context;
 using AmdarisInternship.Infrastructure.Repositories.Interfaces;
-using System;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace AmdarisInternship.Infrastructure.Repositories.Implementations
 {
@@ -12,6 +12,17 @@ namespace AmdarisInternship.Infrastructure.Repositories.Implementations
         public LessonRepository (AppDbContext dbContext) : base(dbContext)
         {
 
+        }
+
+        public IList<Lesson> GetLessonsWithAttachmentsForPromotion (int promotionId)
+        {
+            return _dbContext.Lessons
+                .Include(x => x.Attachments)
+                .Include(x => x.Promotion)
+                .Where(x => x.PromotionId == promotionId)
+                .OrderBy(x => x.StartTime)
+                .ToList();
+                 
         }
     }
 }

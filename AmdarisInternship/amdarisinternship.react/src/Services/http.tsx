@@ -7,7 +7,7 @@ function get(path: string) {
     {
         setToken(localStorage.getItem('token') || '');
     }
-    
+
     return axios.get(path);
 }
 

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AmdarisInternship.API.Controllers
 {
-    [Authorize(Roles = UserRoles.Administrator)]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class LessonController : Controller
@@ -22,11 +22,11 @@ namespace AmdarisInternship.API.Controllers
             _lessonAttachmentsService = lessonAttachmentsService;
         }
 
-        [HttpGet]
+        [HttpGet("promotion{promotionId}")]
         [ApiExceptionFilter]
-        public IActionResult Get()
+        public IActionResult GetLessonsForPromotionWithId(int promotionId)
         {
-            return Ok();
+            return Ok(_lessonAttachmentsService.GetLessonsWithAttachments(promotionId));
         }
 
         [HttpGet("{id}")]
