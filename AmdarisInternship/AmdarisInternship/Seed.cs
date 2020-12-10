@@ -48,8 +48,8 @@ namespace AmdarisInternship.API
                     UserName = "eugenciolacu@yahoo.com",
                     Email = "eugenciolacu@yahoo.com",
 
-                    FirstName = "Lecturer",
-                    LastName = "Lecturer lecturer",
+                    FirstName = "LecturerFirstName",
+                    LastName = "LecturerLastName",
                     Skype = null,
                     AvatarExtension = null,
                     AvatarName = null,
@@ -90,8 +90,8 @@ namespace AmdarisInternship.API
                     UserName = "intern@yahoo.com",
                     Email = "intern@yahoo.com",
 
-                    FirstName = "Intern",
-                    LastName = "Intern .kjfbhwrk,h",
+                    FirstName = "InternFirstName",
+                    LastName = "InternLastName",
                     Skype = null,
                     AvatarExtension = null,
                     AvatarName = null,
@@ -167,14 +167,12 @@ namespace AmdarisInternship.API
                 appDbContext.SaveChanges();
             }
 
-
-
             if (!appDbContext.Lessons.Any())
             {
                 var lesson1 = new Lesson()
                 {
                     Name = "Intership intro",
-                    Description = "kljghkwhg;kwhrth;whrtlhjwr;ltjhwlrjth.kjhergkhwrlthj",
+                    Description = "Introduction",
                     StartTime = new System.DateTime(2021, 1, 2, 9, 0, 0),
                     EndTime = new System.DateTime(2021, 1, 2, 10, 0, 0),
                     LecturerId = appDbContext.Users.FirstOrDefault(x => x.UserName == "eugenciolacu@yahoo.com").Id,
@@ -187,7 +185,7 @@ namespace AmdarisInternship.API
                 var lesson2 = new Lesson()
                 {
                     Name = "Second lesson",
-                    Description = "second lesson description",
+                    Description = "Second lesson description",
                     StartTime = new System.DateTime(2021, 1, 3, 9, 0, 0),
                     EndTime = new System.DateTime(2021, 1, 3, 10, 0, 0),
                     LecturerId = appDbContext.Users.FirstOrDefault(x => x.UserName == "eugenciolacu@yahoo.com").Id,

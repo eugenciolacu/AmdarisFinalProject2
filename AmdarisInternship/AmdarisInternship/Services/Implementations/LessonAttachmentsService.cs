@@ -1,4 +1,5 @@
 ﻿using AmdarisInternship.API.Dtos.LessonDtos;
+using AmdarisInternship.API.Dtos.UserDtos;
 using AmdarisInternship.API.Services.Interfaces;
 using AmdarisInternship.Domain;
 using AmdarisInternship.Infrastructure.Repositories.Interfaces;
@@ -31,6 +32,8 @@ namespace AmdarisInternship.API.Services.Implementations
             {
                 LessonWithAttachmentsDto lessonWithAttachmentsDto = new LessonWithAttachmentsDto();
                 lessonWithAttachmentsDto.Lesson = _mapper.Map<LessonDto>(item);
+                //lessonWithAttachmentsDto.User = _mapper.Map<UserDto>(item);
+                lessonWithAttachmentsDto.User = new UserDto { FirstName = item.User.FirstName, LastName = item.User.LastName };
 
                 foreach (var lessonsAttachment in item.Attachments)
                 {

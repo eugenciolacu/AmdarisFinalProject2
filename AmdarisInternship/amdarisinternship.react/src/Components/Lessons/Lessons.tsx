@@ -10,7 +10,6 @@ import { Attachment } from '../../Models/Attachment';
 import { LessonWithAttachments } from '../../Models/LessonWithAttachments';
 import { useState } from 'react';
 import Grid from '@material-ui/core/Grid/Grid';
-import Paper from '@material-ui/core/Paper/Paper';
 import Card from '@material-ui/core/Card/Card';
 
 
@@ -20,12 +19,12 @@ const useStyles = makeStyles((theme: Theme) =>
             flexGrow: 1,
             marginTop: theme.spacing(1),
         },
-
         card: {
-            backgroundColor: 'red',
+            width: '300px',
             height: '100%',
             display: 'flex',
             flexDirection: 'column',
+            overflow: 'auto',
         },
         cardMedia: {
             paddingTop: '56.25%', // 16:9
@@ -33,6 +32,9 @@ const useStyles = makeStyles((theme: Theme) =>
         cardContent: {
             flexGrow: 1,
         },
+        lessonInfo: {
+            fontSize: '20px',
+        }
     }),
 );
 
@@ -58,6 +60,7 @@ export default function Lessons() {
             gotLessons[i].lesson = new Object as Lesson;
             gotLessons[i].attachments = new Array<Attachment>(data.data[i].attachments.length);
             gotLessons[i].lesson = data.data[i].lesson;
+            gotLessons[i].user = data.data[i].user;
 
             let j: number = 0;
             for (j; j < gotLessons[i].attachments.length; j++) {
@@ -68,6 +71,25 @@ export default function Lessons() {
         console.log(gotLessons);
 
         setLessons(gotLessons);
+    }
+
+    function getDateInfo(start: Date, end: Date): string {
+        let dateInfo: string = "";
+
+        let startDate: Date = new Date(start);
+        let endDate: Date = new Date(end);
+
+        const dateFormatter = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: '2-digit' });
+
+        const timeFormatter = new Intl.DateTimeFormat('en', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+        dateInfo += dateFormatter.format(startDate).toString();
+        dateInfo += '\n' + 'From: ';
+        dateInfo += timeFormatter.format(startDate).toString();
+        dateInfo += '\n' + 'To: ';
+        dateInfo += timeFormatter.format(endDate).toString();
+
+        return dateInfo;
     }
 
     return (
@@ -81,8 +103,20 @@ export default function Lessons() {
                             <Grid key={x.lesson.id} item>
                                 <Card className={classes.card}>
                                     <CardContent className={classes.cardContent}>
-                                        <Typography variant="h6">
-                                            <b> {x.lesson.name}</b>
+                                        <Typography className={classes.lessonInfo}>
+                                            {x.lesson.name}
+                                        </Typography>
+                                        <Typography className={classes.lessonInfo}>
+                                            Short description
+                                        </Typography>
+                                        <Typography className={classes.lessonInfo}>
+                                            {x.lesson.description}
+                                        </Typography>
+                                        <Typography component ="pre" className={classes.lessonInfo}>
+                                            {getDateInfo(x.lesson.startTime, x.lesson.endTime)}
+                                        </Typography>
+                                        <Typography className={classes.lessonInfo}>
+                                            Lecturer: {x.user.firstName + ' ' + x.user.lastName} 
                                         </Typography>
                                     </CardContent>
                                 </Card>

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using AmdarisInternship.API.Dtos.UserDtos;
 
 namespace AmdarisInternship.API.Dtos.LessonDtos
 {
@@ -9,6 +7,7 @@ namespace AmdarisInternship.API.Dtos.LessonDtos
     {
         public LessonDto Lesson { get; set; }
         public List<AttachmentDto> Attachments { get; set; }
+        public UserDto User { get; set; }
 
         public LessonWithAttachmentsDto()
         {

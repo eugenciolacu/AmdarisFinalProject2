@@ -4,6 +4,8 @@ using AmdarisInternship.API.Dtos.PromotionDtos;
 using AmdarisInternship.API.Dtos.LessonDtos;
 using AmdarisInternship.Domain;
 using AutoMapper;
+using AmdarisInternship.Domain.Auth;
+using AmdarisInternship.API.Dtos.UserDtos;
 
 namespace AmdarisInternship.API.Mappings
 {
@@ -28,6 +30,10 @@ namespace AmdarisInternship.API.Mappings
 
             CreateMap<Attachment, AttachmentDto>();
             CreateMap<AttachmentDto, Attachment>();
+
+            CreateMap<User, UserDto>()
+                .ForMember(dest => dest.FirstName, opts => opts.MapFrom(src => src.FirstName))
+                .ForMember(dest => dest.LastName, opts => opts.MapFrom(src => src.LastName));
         }
     }
 }

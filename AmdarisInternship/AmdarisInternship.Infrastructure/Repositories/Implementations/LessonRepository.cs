@@ -19,6 +19,7 @@ namespace AmdarisInternship.Infrastructure.Repositories.Implementations
             return _dbContext.Lessons
                 .Include(x => x.Attachments)
                 .Include(x => x.Promotion)
+                .Include(x => x.User)
                 .Where(x => x.PromotionId == promotionId)
                 .OrderBy(x => x.StartTime)
                 .ToList();
