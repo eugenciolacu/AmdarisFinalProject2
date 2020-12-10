@@ -31,54 +31,70 @@ const useRowStyles = makeStyles({
 function Row(props: { row: ModuleWithModuleGrading }) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
+
+    const [isOpen, setOpenModalForm] = useState(false);
+    const [trigger, setTrigger] = useState(0);
+
     const classes = useRowStyles();
 
     return (
-        <React.Fragment>
-            <TableRow className={classes.root}>
-                <TableCell>
-                    <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                    </IconButton>
-                </TableCell>
-                <TableCell component="th" scope="row">
-                    {row.module.name}
-                </TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
-                        <Box margin={1}>
-                            <Table size="small" aria-label="purchases">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Grading component name</TableCell>
-                                        <TableCell>Grading component name</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {row.moduleGradings.map((x) => (
-                                        <TableRow key={x.id}>
-                                            <TableCell component="th" scope="row">
-                                                {x.name}
-                                            </TableCell>
-                                            <TableCell>{x.weight}</TableCell>
+        <>
+            <React.Fragment>
+                <TableRow className={classes.root}>
+                    <TableCell>
+                        <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+                            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                        </IconButton>
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                        {row.module.name}
+                    </TableCell>
+                    <TableCell>
+
+
+                        <Button variant="contained" color="secondary" onClick={() => setOpenModalForm(true)}> Edit </Button>
+                        {/* create similar form for edit module */}
+
+
+                    </TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                        <Collapse in={open} timeout="auto" unmountOnExit>
+                            <Box margin={1}>
+                                <Table size="small" aria-label="purchases">
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Grading component name</TableCell>
+                                            <TableCell>Grading component name</TableCell>
                                         </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </Box>
-                    </Collapse>
-                </TableCell>
-            </TableRow>
-        </React.Fragment>
+                                    </TableHead>
+                                    <TableBody>
+                                        {row.moduleGradings.map((x) => (
+                                            <TableRow key={x.id}>
+                                                <TableCell component="th" scope="row">
+                                                    {x.name}
+                                                </TableCell>
+                                                <TableCell>{x.weight}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </Box>
+                        </Collapse>
+                    </TableCell>
+                </TableRow>
+            </React.Fragment>
+
+            <ModalModuleForm isOpen={isOpen} setOpen={setOpenModalForm} setTrigger={setTrigger} trigger={trigger} />
+        </>
     );
 }
 
 
 export default function ModuleView() {
 
-    const [isOpen, setOpen] = useState(false);
+    const [isOpen, setOpenModalForm] = useState(false);
     const [trigger, setTrigger] = useState(0);
 
     const [modules, setModules] = useState([] as ModuleWithModuleGrading[]);
@@ -121,6 +137,7 @@ export default function ModuleView() {
                         <TableRow>
                             <TableCell />
                             <TableCell>Module name</TableCell>
+                            <TableCell />
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -129,15 +146,16 @@ export default function ModuleView() {
                         ))}
                         <TableRow>
                             <TableCell>
-                                <Button variant="contained" color="primary" onClick={() => setOpen(true)}>Add module</Button>
+                                <Button variant="contained" color="primary" onClick={() => setOpenModalForm(true)}>Add module</Button>
                             </TableCell>
+                            <TableCell />
                             <TableCell />
                         </TableRow>
                     </TableBody>
                 </Table>
             </TableContainer>
 
-            <ModalModuleForm isOpen={isOpen} setOpen={setOpen} setTrigger={setTrigger} trigger={trigger} />
+            <ModalModuleForm isOpen={isOpen} setOpen={setOpenModalForm} setTrigger={setTrigger} trigger={trigger} />
         </>
     );
 }
