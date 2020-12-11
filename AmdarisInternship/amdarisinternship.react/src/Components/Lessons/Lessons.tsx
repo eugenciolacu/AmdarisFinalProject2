@@ -106,9 +106,9 @@ export default function Lessons() {
                                         <Typography className={classes.lessonInfo}>
                                             {x.lesson.name}
                                         </Typography>
-                                        <Typography className={classes.lessonInfo}>
+                                        {/* <Typography className={classes.lessonInfo}>
                                             Short description
-                                        </Typography>
+                                        </Typography> */}
                                         <Typography className={classes.lessonInfo}>
                                             {x.lesson.description}
                                         </Typography>

@@ -3,6 +3,9 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import ModuleView from './ModuleView';
+import LessonView from './LessonView';
+import PromotionView from './PromotionView';
+import UserView from './UserView';
 
 export default function Navigation() {
     const classes = useStyles();
@@ -10,16 +13,21 @@ export default function Navigation() {
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue);
-
-        if (newValue == 0) {
-            <ModuleView />
-        }
     };
 
-    let tmp: any = <ModuleView />;
+    let tmp: any = null;
 
-    if (value != 0) {
-        tmp = null;
+    if (value == 0) {
+        tmp = <ModuleView />;
+    }
+    else if (value == 1) {
+        tmp = <PromotionView />
+    }
+    else if (value == 2) {
+        tmp = <LessonView />;
+    }
+    else if (value == 3) {
+        tmp = <UserView />;
     }
 
     return (
