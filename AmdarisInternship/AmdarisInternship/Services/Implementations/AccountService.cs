@@ -4,10 +4,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AmdarisInternship.API.Dtos.Account;
+using AmdarisInternship.API.Dtos.UserDtos;
 using AmdarisInternship.API.Infrastructure.Configurations;
 using AmdarisInternship.API.Infrastructure.Models;
 using AmdarisInternship.API.Services.Interfaces;
 using AmdarisInternship.Domain.Auth;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -21,12 +23,16 @@ namespace AmdarisInternship.API.Services.Implementations
         private readonly RoleManager<Role> _roleManager;
         private readonly SignInManager<User> _signInManager;
 
-        public AccountService(IOptions<AuthOptions> authenticationOptions, UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager)
+        private readonly IMapper _mapper;
+
+
+        public AccountService(IOptions<AuthOptions> authenticationOptions, UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager, IMapper mapper)
         {
             _authenticationOptions = authenticationOptions.Value;
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
+            _mapper = mapper;
         }
 
         public async Task<LoginResponse> Login(UserForLoginDto userForLoginDto)
@@ -136,6 +142,21 @@ namespace AmdarisInternship.API.Services.Implementations
 
             response = new RegistrationResponse { Status = "Success", Message = "User created successfully!" };
             return await Task.FromResult(response);
+        }
+
+        public async Task<IList<LecturerDto>> GetLecturers()
+        {
+            var users = await _userManager.GetUsersInRoleAsync(UserRoles.Lecturer);
+
+            IList<LecturerDto> result = new List<LecturerDto>();
+
+            foreach(User user in users)
+            {
+                LecturerDto lecturerDto = _mapper.Map<User, LecturerDto>(user);
+                result.Add(lecturerDto);
+            }
+
+            return result;
         }
     }
 }

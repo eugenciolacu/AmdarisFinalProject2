@@ -43,13 +43,13 @@ namespace AmdarisInternship.API
                     await userManager.AddToRoleAsync(user, UserRoles.Administrator);
                 }
 
-                var lector = new User()
+                var lector1 = new User()
                 {
-                    UserName = "eugenciolacu@yahoo.com",
-                    Email = "eugenciolacu@yahoo.com",
+                    UserName = "lecto1@yahoo.com",
+                    Email = "lector1@yahoo.com",
 
-                    FirstName = "LecturerFirstName",
-                    LastName = "LecturerLastName",
+                    FirstName = "FirstName 1",
+                    LastName = "LastName 1",
                     Skype = null,
                     AvatarExtension = null,
                     AvatarName = null,
@@ -57,11 +57,32 @@ namespace AmdarisInternship.API
                     MentroId = null
                 };
 
-                await userManager.CreateAsync(lector, "Admin@123");
+                await userManager.CreateAsync(lector1, "Admin@123");
 
                 if (await roleManager.RoleExistsAsync(UserRoles.Lecturer))
                 {
-                    await userManager.AddToRoleAsync(lector, UserRoles.Lecturer);
+                    await userManager.AddToRoleAsync(lector1, UserRoles.Lecturer);
+                }
+
+                var lector2 = new User()
+                {
+                    UserName = "lecto2@yahoo.com",
+                    Email = "lector2@yahoo.com",
+
+                    FirstName = "FirstName 2",
+                    LastName = "LastName 2",
+                    Skype = null,
+                    AvatarExtension = null,
+                    AvatarName = null,
+                    Avatar = null,
+                    MentroId = null
+                };
+
+                await userManager.CreateAsync(lector2, "Admin@123");
+
+                if (await roleManager.RoleExistsAsync(UserRoles.Lecturer))
+                {
+                    await userManager.AddToRoleAsync(lector2, UserRoles.Lecturer);
                 }
 
                 var mentor = new User()
@@ -175,7 +196,7 @@ namespace AmdarisInternship.API
                     Description = "Introduction",
                     StartTime = new System.DateTime(2021, 1, 2, 9, 0, 0),
                     EndTime = new System.DateTime(2021, 1, 2, 10, 0, 0),
-                    LecturerId = appDbContext.Users.FirstOrDefault(x => x.UserName == "eugenciolacu@yahoo.com").Id,
+                    LecturerId = appDbContext.Users.FirstOrDefault(x => x.UserName == "lecto1@yahoo.com").Id,
                     ModuleId = appDbContext.Modules.FirstOrDefault(x => x.Name == "C#").Id,
                     PromotionId = appDbContext.Promotions.FirstOrDefault(x => x.Name == "Winter 2021").Id
                 };
@@ -188,7 +209,7 @@ namespace AmdarisInternship.API
                     Description = "Second lesson description",
                     StartTime = new System.DateTime(2021, 1, 3, 9, 0, 0),
                     EndTime = new System.DateTime(2021, 1, 3, 10, 0, 0),
-                    LecturerId = appDbContext.Users.FirstOrDefault(x => x.UserName == "eugenciolacu@yahoo.com").Id,
+                    LecturerId = appDbContext.Users.FirstOrDefault(x => x.UserName == "lecto2@yahoo.com").Id,
                     ModuleId = appDbContext.Modules.FirstOrDefault(x => x.Name == "C#").Id,
                     PromotionId = appDbContext.Promotions.FirstOrDefault(x => x.Name == "Winter 2021").Id
                 };

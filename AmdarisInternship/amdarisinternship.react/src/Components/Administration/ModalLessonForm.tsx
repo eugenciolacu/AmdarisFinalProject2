@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, makeStyles, TextField } from "@material-ui/core";
 import { useState } from "react";
 import Dialog from '@material-ui/core/Dialog/Dialog';
@@ -13,6 +13,10 @@ import TableRow from '@material-ui/core/TableRow/TableRow';
 import TableCell from '@material-ui/core/TableCell/TableCell';
 import Grid from '@material-ui/core/Grid/Grid';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import UserService from '../../Services/UserService';
+import ModuleService from '../../Services/ModuleService';
+import PromotionService from '../../Services/PromotionService';
+import LessonService from '../../Services/LessonService';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -71,23 +75,88 @@ export default function ModalLessonForm({ isOpen, setOpen, setTrigger, trigger }
         }
     });
 
-    const lecturers = [
-        { fullName: 'Test 1', id: 1 },
-        { fullName: 'Test 2', id: 2 },
-    ]
+    const [lecturers, setLecturers] = useState([] as any[]);
+    const [modules, setModules] = useState([] as any[]);
+    const [promotions, setPromotions] = useState([] as any[]);
+    const [selectedLecturerId, setSelectedLecturerId] = useState(-1);
+    const [selectedModuleId, setSelectedModuleId] = useState(-1);
+    const [selectedPromotionId, setSelectedPromotionId] = useState(-1);
 
-    const modules = [
-        { moduleName: 'Test module name 1', id: 1 },
-        { moduleName: 'Test module name 2', id: 2 },
-    ]
+    const vasea = (x: any) => console.log(x);
 
-    const promotions = [
-        { promotionName: 'Test promotion name 1', id: 1 },
-        { promotionName: 'Test promotion name 2', id: 2 },
-    ]
+    useEffect(() => {
+        fetchLecturers();
+        fetchModules();
+        fetchPromotions();
+    }, [])
 
-    const onSubmit = async () => {
-        alert("ok");
+    async function fetchLecturers() {
+        let data = await UserService.getLecturers();
+
+        let i: number = 0;
+
+        let tmp = new Array<any>(data.data.length);
+
+        for (i; i < tmp.length; i++) {
+            tmp[i] = {
+                fullName: data.data[i].lastName + ' ' + data.data[i].firstName,
+                id: data.data[i].id
+            };
+        }
+
+        setLecturers(tmp);
+    }
+
+    async function fetchModules() {
+        let data = await ModuleService.getModules();
+
+        let i: number = 0;
+
+        let tmp = new Array<any>(data.data.length);
+
+        for (i; i < tmp.length; i++) {
+            tmp[i] = {
+                moduleName: data.data[i].module.name,
+                id: data.data[i].module.id,
+            }
+        }
+
+        setModules(tmp);
+    }
+
+    async function fetchPromotions() {
+        let data = await PromotionService.getPromotions();
+
+        let i: number = 0;
+
+        let tmp = new Array<any>(data.data.length);
+
+        for (i; i < tmp.length; i++) {
+            tmp[i] = {
+                promotionName: data.data[i].name,
+                id: data.data[i].id,
+            }
+        }
+
+        setPromotions(tmp);
+    }
+
+    const onSubmit = async (addLessonForm: AddLessonForm) => {
+        addLessonForm.attachments = [];
+        addLessonForm.lecturerId = selectedLecturerId;
+        addLessonForm.moduleId = selectedModuleId;
+        addLessonForm.promotionId = selectedPromotionId;
+
+
+
+
+
+// make here an object as DTO from back
+
+
+
+
+        await LessonService.addLesson(addLessonForm);
     }
 
     const createLessondata = (column_1: any) => {
@@ -143,6 +212,12 @@ export default function ModalLessonForm({ isOpen, setOpen, setTrigger, trigger }
                         InputLabelProps={{
                             shrink: true,
                         }}
+                        inputRef={register({
+                            required: {
+                                value: true,
+                                message: "Please peek valid date and time"
+                            },
+                        })}
                     />
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <TextField
@@ -155,10 +230,17 @@ export default function ModalLessonForm({ isOpen, setOpen, setTrigger, trigger }
                         InputLabelProps={{
                             shrink: true,
                         }}
+                        inputRef={register({
+                            required: {
+                                value: true,
+                                message: "Please peek valid date and time"
+                            },
+                        })}
                     />
                 </Grid>
 
                 <Autocomplete
+                    onChange={(event, value, reason, details) => setSelectedLecturerId(details?.option.id)}
                     options={lecturers}
                     getOptionLabel={(option) => option.fullName}
                     renderInput={(params) => <TextField {...params}
@@ -168,10 +250,17 @@ export default function ModalLessonForm({ isOpen, setOpen, setTrigger, trigger }
                         id="lessonLecturer"
                         label="Lecturer"
                         fullWidth
+                        inputRef={register({
+                            required: {
+                                value: true,
+                                message: "Please select a lecturer"
+                            },
+                        })}
                     />}
                 />
 
                 <Autocomplete
+                    onChange={(event, value, reason, details) => setSelectedModuleId(details?.option.id)}
                     options={modules}
                     getOptionLabel={(option) => option.moduleName}
                     renderInput={(params) => <TextField {...params}
@@ -181,10 +270,17 @@ export default function ModalLessonForm({ isOpen, setOpen, setTrigger, trigger }
                         id="lessonModule"
                         label="Module"
                         fullWidth
+                        inputRef={register({
+                            required: {
+                                value: true,
+                                message: "Please select a module"
+                            },
+                        })}
                     />}
                 />
 
                 <Autocomplete
+                    onChange={(event, value, reason, details) => setSelectedPromotionId(details?.option.id)}
                     options={promotions}
                     getOptionLabel={(option) => option.promotionName}
                     renderInput={(params) => <TextField {...params}
@@ -194,6 +290,12 @@ export default function ModalLessonForm({ isOpen, setOpen, setTrigger, trigger }
                         id="lessonPromotion"
                         label="Promotion"
                         fullWidth
+                        inputRef={register({
+                            required: {
+                                value: true,
+                                message: "Please select a promotion"
+                            },
+                        })}
                     />}
                 />
             </>

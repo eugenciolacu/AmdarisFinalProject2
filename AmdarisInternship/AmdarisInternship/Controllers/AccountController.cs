@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AmdarisInternship.API.Dtos.Account;
+using AmdarisInternship.API.Dtos.UserDtos;
 using AmdarisInternship.API.Infrastructure.Configurations;
 using AmdarisInternship.API.Infrastructure.Models;
 using AmdarisInternship.API.Services.Interfaces;
@@ -72,5 +73,16 @@ namespace AmdarisInternship.API.Controllers
                 return Ok();
             }
         }
+
+        [Authorize(Roles = UserRoles.Administrator)]
+        [HttpGet]
+        [Route("GetLecturers")]
+        public async Task<IActionResult> GetLecturers()
+        {
+            var response = await _accountService.GetLecturers();
+
+            return Ok(response);
+        }
+
     }
 }

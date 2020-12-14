@@ -34,6 +34,8 @@ namespace AmdarisInternship.API.Mappings
             CreateMap<User, UserDto>()
                 .ForMember(dest => dest.FirstName, opts => opts.MapFrom(src => src.FirstName))
                 .ForMember(dest => dest.LastName, opts => opts.MapFrom(src => src.LastName));
+
+            CreateMap<User, LecturerDto>();
         }
     }
 }
