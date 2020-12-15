@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30711.63
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmdarisInternship.API", "AmdarisInternship\AmdarisInternship.API.csproj", "{A9B50B2F-0FEC-456D-9186-72DA87AF7C32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmdarisInternship.API", "AmdarisInternship\AmdarisInternship.API.csproj", "{A9B50B2F-0FEC-456D-9186-72DA87AF7C32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmdarisInternship.Domain", "AmdarisInternship.Domain\AmdarisInternship.Domain.csproj", "{6CC21029-D763-4D09-8597-32E5D03B69F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmdarisInternship.Domain", "AmdarisInternship.Domain\AmdarisInternship.Domain.csproj", "{6CC21029-D763-4D09-8597-32E5D03B69F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmdarisInternship.Infrastructure", "AmdarisInternship.Infrastructure\AmdarisInternship.Infrastructure.csproj", "{5F8ABA71-B4DC-4869-B165-9B63774EF5BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmdarisInternship.Infrastructure", "AmdarisInternship.Infrastructure\AmdarisInternship.Infrastructure.csproj", "{5F8ABA71-B4DC-4869-B165-9B63774EF5BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmdarisInternship.API.Tests", "AmdarisInternship.API.Tests\AmdarisInternship.API.Tests.csproj", "{1A5FEDBC-C4A3-44DC-9A71-D6BF058EA856}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{5F8ABA71-B4DC-4869-B165-9B63774EF5BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F8ABA71-B4DC-4869-B165-9B63774EF5BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F8ABA71-B4DC-4869-B165-9B63774EF5BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A5FEDBC-C4A3-44DC-9A71-D6BF058EA856}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A5FEDBC-C4A3-44DC-9A71-D6BF058EA856}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A5FEDBC-C4A3-44DC-9A71-D6BF058EA856}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A5FEDBC-C4A3-44DC-9A71-D6BF058EA856}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
