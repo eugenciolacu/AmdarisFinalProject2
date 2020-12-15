@@ -54,7 +54,7 @@ export default function ModalPromotionForm({ isOpen, setOpenModalForm, setTrigge
     return (
         <Dialog
             open={isOpen}
-            // onClose={() => setOpenModalForm(false)}
+            onClose={() => setOpenModalForm(false)}
             aria-labelledby="form-dialog-title"
             maxWidth='xl'
         >

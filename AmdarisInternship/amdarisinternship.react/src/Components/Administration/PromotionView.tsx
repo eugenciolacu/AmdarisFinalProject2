@@ -78,7 +78,7 @@ export default function PromotionView() {
                 </Table>
             </TableContainer>
 
-            <ModalPromotionForm isOpen={isOpen} setOpen={setOpenModalForm} setTrigger={setTrigger} trigger={trigger} />
+            <ModalPromotionForm isOpen={isOpen} setOpenModalForm={setOpenModalForm} setTrigger={setTrigger} trigger={trigger} />
         </>
     );
 }
