@@ -33,7 +33,14 @@ namespace AmdarisInternship.API.Controllers
         [ApiExceptionFilter]
         public IActionResult Get(int id)
         {
-            return Ok();
+            var result = _lessonAttachmentsService.GetLessonWithAttachmentsByLessonId(id);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
         }
 
         [HttpPost]
@@ -47,7 +54,7 @@ namespace AmdarisInternship.API.Controllers
                 return BadRequest("Lesson alreasy exists in promotion");
             }
 
-            return CreatedAtAction(nameof(Get), new { id = lessonWithAttachments.Lesson.Id , promotionId = lessonWithAttachments.Lesson.PromotionId });
+            return CreatedAtAction(nameof(Get), new { id = lessonWithAttachments.Lesson.Id }, lessonWithAttachments);
         }
 
         [HttpPut("{id}")]

@@ -1,4 +1,4 @@
-import { AddLessonForm, AttachmentForm } from '../Models/AddLessonForm';
+import { LessonWithAttachments } from '../Models/LessonWithAttachments';
 import http from './http';
 
 const authPath = 'Lesson';
@@ -9,7 +9,7 @@ async function getLessons(promotionId: number): Promise<any> {
     return data;
 }
 
-async function addLesson(data: AddLessonForm ): Promise<any> {
+async function addLesson(data: LessonWithAttachments): Promise<any> {
     await http.post(`${authPath}`, data);
 }
 

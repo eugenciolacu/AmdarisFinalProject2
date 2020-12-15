@@ -389,6 +389,5 @@ export default function ModalModuleForm({ isOpen, setOpen, setTrigger, trigger }
                 </div>
             </DialogContent>
         </Dialog>
-
     );
 }

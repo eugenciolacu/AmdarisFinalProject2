@@ -54,7 +54,7 @@ namespace AmdarisInternship.API.Controllers
                 return BadRequest("Promotion already exists");
             }
 
-            return Ok();
+            return Ok(promotion);
         }
 
         [HttpPut("{id}")]

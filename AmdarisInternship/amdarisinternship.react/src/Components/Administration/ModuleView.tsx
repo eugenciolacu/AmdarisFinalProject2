@@ -83,8 +83,6 @@ function Row(props: { row: ModuleWithModuleGrading }) {
                     </Collapse>
                 </TableCell>
             </TableRow>
-
-            <ModalModuleForm isOpen={isOpen} setOpen={setOpenModalForm} setTrigger={setTrigger} trigger={trigger} />
         </>
     );
 }
@@ -120,8 +118,6 @@ export default function ModuleView() {
                 gotModules[i].moduleGradings[j] = data.data[i].moduleGradings[j];
             }
         }
-
-        console.log(gotModules);
 
         setModules(gotModules);
     }

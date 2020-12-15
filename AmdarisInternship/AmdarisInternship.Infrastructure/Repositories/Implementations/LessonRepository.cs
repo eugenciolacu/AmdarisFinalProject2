@@ -25,5 +25,14 @@ namespace AmdarisInternship.Infrastructure.Repositories.Implementations
                 .ToList();
                  
         }
+
+        public Lesson GetLessonWithAttachmentsByLessonId (int id)
+        {
+            return _dbContext.Lessons
+                .Include(x => x.Attachments)
+                .Include(x => x.Promotion)
+                .Include(x => x.User)
+                .FirstOrDefault(x => x.Id == id);
+        }
     }
 }

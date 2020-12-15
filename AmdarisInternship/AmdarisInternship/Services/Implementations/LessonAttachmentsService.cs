@@ -46,6 +46,27 @@ namespace AmdarisInternship.API.Services.Implementations
             return result;
         }
 
+        public LessonWithAttachmentsDto GetLessonWithAttachmentsByLessonId(int id)
+        {
+            var lesson = _lessonRepository.GetLessonWithAttachmentsByLessonId(id);
+
+            if (lesson == null)
+            {
+                throw new KeyNotFoundException("Lesson not found");
+            }
+
+            LessonWithAttachmentsDto result = new LessonWithAttachmentsDto();
+            result.Lesson = _mapper.Map<LessonDto>(lesson);
+            result.User = _mapper.Map<UserDto>(lesson.User);
+
+            foreach (var attachment in lesson.Attachments)
+            {
+                result.Attachments.Add(_mapper.Map<AttachmentDto>(attachment));
+            }
+
+            return result;
+        }
+
         public LessonWithAttachmentsDto AddLessonWithAttachments(LessonWithAttachmentsDto dto)
         {
             if (CheckIfLessonExistsInPromotion(dto.Lesson.Name, dto.Lesson.PromotionId))

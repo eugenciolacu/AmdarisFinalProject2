@@ -19,10 +19,7 @@ const useRowStyles = makeStyles({
 
 function Row(props: { row: LessonWithAttachments }) {
     const { row } = props;
-    const [open, setOpen] = useState(false);
-
-    const [isOpen, setOpenModalForm] = useState(false);
-    const [trigger, setTrigger] = useState(0);
+    // const [open, setOpen] = useState(false);
 
     const classes = useRowStyles();
 
@@ -30,9 +27,9 @@ function Row(props: { row: LessonWithAttachments }) {
         <>
             <TableRow className={classes.root}>
                 <TableCell>
-                    <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+                    {/* <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                    </IconButton>
+                    </IconButton> */}
                 </TableCell>
                 <TableCell component="th" scope="row">
                     {row.lesson.name}
@@ -85,8 +82,6 @@ export default function LessonView() {
             }
         }
 
-        console.log(gotLessons);
-
         setLessons(gotLessons);
     }
 
@@ -122,7 +117,7 @@ export default function LessonView() {
                 </Table>
             </TableContainer>
 
-            <ModalLessonForm isOpen={isOpen} setOpen={setOpenModalForm} setTrigger={setTrigger} trigger={trigger} />
+            <ModalLessonForm isOpen={isOpen} setOpenModalForm={setOpenModalForm} setTrigger={setTrigger} trigger={trigger} />
         </>
     );
 }

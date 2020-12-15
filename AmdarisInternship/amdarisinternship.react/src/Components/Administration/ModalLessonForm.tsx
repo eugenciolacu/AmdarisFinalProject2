@@ -17,6 +17,9 @@ import UserService from '../../Services/UserService';
 import ModuleService from '../../Services/ModuleService';
 import PromotionService from '../../Services/PromotionService';
 import LessonService from '../../Services/LessonService';
+import { LessonWithAttachments } from '../../Models/LessonWithAttachments';
+import { Lesson } from '../../Models/Lesson';
+import { User } from '../../Models/User';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -52,10 +55,8 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 
-export default function ModalLessonForm({ isOpen, setOpen, setTrigger, trigger }: any) {
+export default function ModalLessonForm({ isOpen, setOpenModalForm, setTrigger, trigger }: any) {
     const classes = useStyles();
-
-    const [btnDisabled, setBtnDisabled] = useState(true);
 
     const { register, handleSubmit, errors } = useForm<AddLessonForm>({
         defaultValues: {
@@ -81,8 +82,6 @@ export default function ModalLessonForm({ isOpen, setOpen, setTrigger, trigger }
     const [selectedLecturerId, setSelectedLecturerId] = useState(-1);
     const [selectedModuleId, setSelectedModuleId] = useState(-1);
     const [selectedPromotionId, setSelectedPromotionId] = useState(-1);
-
-    const vasea = (x: any) => console.log(x);
 
     useEffect(() => {
         fetchLecturers();
@@ -142,21 +141,29 @@ export default function ModalLessonForm({ isOpen, setOpen, setTrigger, trigger }
     }
 
     const onSubmit = async (addLessonForm: AddLessonForm) => {
-        addLessonForm.attachments = [];
-        addLessonForm.lecturerId = selectedLecturerId;
-        addLessonForm.moduleId = selectedModuleId;
-        addLessonForm.promotionId = selectedPromotionId;
 
+        let lesson: Lesson = {
+            id: 0,
+            name: addLessonForm.name,
+            description: addLessonForm.description,
+            startTime: addLessonForm.startTime,
+            endTime: addLessonForm.endTime,
+            lecturerId: selectedLecturerId,
+            moduleId: selectedModuleId,
+            promotionId: selectedPromotionId,
+        }
 
+        let data : LessonWithAttachments = {
+            lesson: lesson,
+            attachments: [],
+            user: {firstName: "", lastName: ""}
+        }
 
-
-
-// make here an object as DTO from back
-
-
-
-
-        await LessonService.addLesson(addLessonForm);
+        await LessonService.addLesson(data).then(() => {
+            console.log("okokokok");
+            setOpenModalForm(false);
+            setTrigger(trigger + 1);
+        });
     }
 
     const createLessondata = (column_1: any) => {
@@ -305,7 +312,7 @@ export default function ModalLessonForm({ isOpen, setOpen, setTrigger, trigger }
     return (
         <Dialog
             open={isOpen}
-            onClose={() => setOpen(false)}
+            onClose={() => setOpenModalForm(false)}
             aria-labelledby="form-dialog-title"
             maxWidth='xl'
         >
@@ -313,7 +320,6 @@ export default function ModalLessonForm({ isOpen, setOpen, setTrigger, trigger }
             <DialogTitle id="form-dialog-title">Add lesson form</DialogTitle>
 
             <DialogContent style={{ height: 800, width: 1000 }}>
-
                 <div className={classes.paper}>
                     <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
                         <Box className={classes.box}>
@@ -342,7 +348,6 @@ export default function ModalLessonForm({ isOpen, setOpen, setTrigger, trigger }
                         </Box>
                     </form>
                 </div>
-
             </DialogContent>
         </Dialog>
     );

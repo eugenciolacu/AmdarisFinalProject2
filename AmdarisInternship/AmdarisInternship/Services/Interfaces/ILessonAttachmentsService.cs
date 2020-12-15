@@ -9,5 +9,6 @@ namespace AmdarisInternship.API.Services.Interfaces
     {
         LessonWithAttachmentsDto AddLessonWithAttachments(LessonWithAttachmentsDto dto);
         IList<LessonWithAttachmentsDto> GetLessonsWithAttachments(int promotionId);
+        LessonWithAttachmentsDto GetLessonWithAttachmentsByLessonId(int id);
     }
 }
